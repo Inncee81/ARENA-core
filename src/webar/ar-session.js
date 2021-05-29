@@ -44,10 +44,10 @@ AFRAME.registerComponent('arena-webar-session', {
         this.vioPosDiff = new THREE.Vector3();
 
         this.tagPoseMatrix = new THREE.Matrix4();
-        // this.identityMatrix = new THREE.Matrix4();
+        this.identityMatrix = new THREE.Matrix4();
+        this.tagPoseRot = new THREE.Quaternion();
         // this.vioRot = new THREE.Quaternion();
         // this.vioPos = new THREE.Vector3();
-        // this.tagPoseRot = new THREE.Quaternion();
 
         this.cvPerfTrack = Array(10).fill(16.66, 0, 10);
 
@@ -78,6 +78,7 @@ AFRAME.registerComponent('arena-webar-session', {
         };
 
         this.bufIndex = 0;
+        this.cvRate = 0;
         this.cvThrottle = 0;
 
         this.updateAprilTags();
@@ -98,7 +99,7 @@ AFRAME.registerComponent('arena-webar-session', {
         this.cvPerfTrack.shift();
         this.cvPerfTrack.push(lastInterval);
         const avg = this.cvPerfTrack.reduce((a, c) => a + c) / this.cvPerfTrack.length;
-        window.ARENA.cvRate = Math.ceil(60 / Math.max(1, Math.min(60, 1000 / avg)));
+        this.cvRate = Math.ceil(60 / Math.max(1, Math.min(60, 1000 / avg)));
     },
 
     vioFilter: function(vioPrev, vioCur) {
@@ -168,7 +169,7 @@ AFRAME.registerComponent('arena-webar-session', {
         return true;
     },
 
-    findAprilTagWithId: function(id) {
+    getAprilTagWithId: function(id) {
         const tagSystem = document.querySelector('a-scene').systems['apriltag'];
         if (tagSystem !== undefined) {
             const sysTag = tagSystem.get(id);
@@ -358,7 +359,7 @@ AFRAME.registerComponent('arena-webar-session', {
         if (window.innerWidth > data.imgWidth || window.innerHeight > data.imgHeight) {
             el.camera.fov = 31; // found empirically
         } else {
-            el.camera.fov = 27; // found empirically
+            el.camera.fov = 26; // found empirically
         }
         el.camera.aspect = window.innerWidth / window.innerHeight;
         el.camera.near = 0.001; // webxr viewer parameters
@@ -388,11 +389,11 @@ AFRAME.registerComponent('arena-webar-session', {
         const data = this.data;
         const el = this.el;
 
-        // const ARENA = window.ARENA;
         // this.cvThrottle++;
-        // if (this.cvThrottle % ARENA.cvRate) {
+        // if (this.cvThrottle % this.cvRate) {
         //     requestAnimationFrame(this.experimentalWebARProcessCVData.bind(this));
         // }
+        // const start = Date.now();
 
         const imageData = this.preprocessor.getPixels();
         // grab only one channel; already grayscaled!
@@ -406,6 +407,8 @@ AFRAME.registerComponent('arena-webar-session', {
             this.drawTags(detections);
         }
 
+        // this.updateAvgCVRate(Date.now() - start);
+
         requestAnimationFrame(this.experimentalWebARProcessCVData.bind(this));
     },
 
@@ -413,9 +416,8 @@ AFRAME.registerComponent('arena-webar-session', {
         const data = this.data;
         const el = this.el;
 
-        const ARENA = window.ARENA;
         this.cvThrottle++;
-        if (this.cvThrottle % ARENA.cvRate) {
+        if (this.cvThrottle % this.cvRate) {
             return;
         }
         const start = Date.now();
@@ -469,9 +471,12 @@ AFRAME.registerComponent('arena-webar-session', {
                     continue;
                 }
 
+                const timestamp = new Date();
+                const jsonMsg = {scene: ARENA.renderParam, timestamp: timestamp, camera_id: ARENA.camName};
+
                 // search for tag with detection id
                 // known tag from ATLAS (includes Origin tag)
-                const indexedTag = this.findAprilTagWithId(d.id);
+                const indexedTag = this.getAprilTagWithId(d.id);
 
                 // if tag has pose, update camera position based on pose
                 if (indexedTag?.pose) {
@@ -483,6 +488,35 @@ AFRAME.registerComponent('arena-webar-session', {
                     // update camera
                     document.getElementById('cameraSpinner').object3D.quaternion.setFromRotationMatrix(rigPose);
                     document.getElementById('cameraRig').object3D.position.setFromMatrixPosition(rigPose);
+                } else {
+                    if (this.rigMatrix.equals(this.identityMatrix)) {
+                        console.log('Client apriltag solver no calculated rigMatrix yet, zero on origin tag first');
+                    } else {
+                        const tagPose = this.getTagPoseFromRig(d.pose);
+                        this.tagPoseRot.setFromRotationMatrix(tagPose);
+
+                        Object.assign(jsonMsg, {
+                            object_id: 'apriltag_' + d.id,
+                            action: 'update',
+                            type: 'object',
+                            data: {
+                                'position': {
+                                    'x': tagPose.elements[12],
+                                    'y': tagPose.elements[13],
+                                    'z': tagPose.elements[14],
+                                },
+                                'rotation': {
+                                    'x': this.tagPoseRot.x,
+                                    'y': this.tagPoseRot.y,
+                                    'z': this.tagPoseRot.z,
+                                    'w': this.tagPoseRot.w,
+                                },
+                            },
+                        });
+                        ARENA.Mqtt.publish(
+                            'realm/s/' + ARENA.renderParam + '/apriltag_' +
+                            d.id, JSON.stringify(jsonMsg));
+                    }
                 }
             }
             const ids = detections.map((tag) => tag.id);

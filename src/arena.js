@@ -446,7 +446,7 @@ export class Arena {
         const environment = document.createElement('a-entity');
         environment.id = 'env';
 
-        return await fetch(`${this.persistenceUrl}?type=scene-options`, {
+        return await Promise.all( fetch(`${this.persistenceUrl}?type=scene-options`, {
             method: 'GET',
             credentials: this.defaults.disallowJWT? 'omit' : 'same-origin',
         }).
@@ -525,7 +525,7 @@ export class Arena {
             finally(() => {
                 this.sceneOptions = sceneOptions;
                 console.error('loadSceneOptions() out')
-            });
+            }));
     };
 
     /**

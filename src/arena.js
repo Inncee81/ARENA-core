@@ -213,8 +213,16 @@ export class Arena {
      * scene init before starting to receive messages
      */
     initScene = () => {
-        // after scene is completely loaded, add user camera
-        this.events.on(ARENAEventEmitter.events.SCENE_LOADED, () => {
+        // load scene
+        ARENA.loadSceneOptions();
+        ARENA.loadScene();
+        ARENA.loadCamera();
+    }
+
+    /**
+     * After scene is completely loaded, add user camera
+     */
+    async loadCamera() {
             const systems = AFRAME.scenes[0].systems;
             let color = Math.floor(Math.random() * 16777215).toString(16);
             if (color.length < 6) color = '0' + color;
@@ -272,11 +280,6 @@ export class Arena {
                 camera.setAttribute('arena-camera', 'vioEnabled', true);
             }
             SideMenu.setupIcons();
-        });
-
-        // load scene
-        ARENA.loadSceneOptions();
-        ARENA.loadScene();
     }
 
     /**
@@ -286,30 +289,24 @@ export class Arena {
      * @param {Object} position initial position
      * @param {Object} rotation initial rotation
      */
-    loadScene(urlToLoad, position, rotation) {
-        const xhr = new XMLHttpRequest();
-        xhr.withCredentials = !this.defaults.disallowJWT; // Include JWT cookie
-        if (urlToLoad) xhr.open('GET', urlToLoad);
-        else xhr.open('GET', this.persistenceUrl);
-        xhr.send();
-        xhr.responseType = 'json';
+    async loadScene(urlToLoad, position, rotation) {
         const deferredObjects = [];
-        xhr.onload = () => {
-            if (xhr.status !== 200) {
-                Swal.fire({
-                    title: 'Error loading initial scene data',
-                    text: `${xhr.status}: ${xhr.statusText} ${JSON.stringify(xhr.response)}`,
-                    icon: 'error',
-                    showConfirmButton: true,
-                    confirmButtonText: 'Ok',
-                });
-            } else {
-                if (xhr.response === undefined || xhr.response.length === 0) {
+
+        await fetch(this.persistenceUrl, {
+            method: 'GET',
+            credentials: this.defaults.disallowJWT? 'omit' : 'same-origin',
+        }).then((res) => {
+            if (res.status === 200) {
+                return res.json();
+            }
+            return Promise.reject(res);
+        }).
+            then((data) => {
+                if (data === undefined || data.length === 0) {
                     console.error('No scene objects found in persistence.');
-                    ARENA.events.emit(ARENAEventEmitter.events.SCENE_LOADED, true);
                     return;
                 }
-                const arenaObjects = xhr.response;
+                const arenaObjects = data;
                 for (let i = 0; i < arenaObjects.length; i++) {
                     const obj = arenaObjects[i];
                     if (obj.type === 'program') {
@@ -374,9 +371,16 @@ export class Arena {
                     console.info('adding deferred object ' + obj.object_id + ' to parent ' + obj.attributes.parent);
                     this.Mqtt.processMessage(msg);
                 }
-                window.setTimeout(() => ARENA.events.emit(ARENAEventEmitter.events.SCENE_LOADED, true), 500);
-            }
-        };
+            }).
+            catch((res) => {
+                Swal.fire({
+                    title: 'Error loading initial scene data',
+                    text: `${res.status}: ${res.statusText} ${JSON.stringify(res.json())}`,
+                    icon: 'error',
+                    showConfirmButton: true,
+                    confirmButtonText: 'Ok',
+                });
+            });
     };
 
     /**
@@ -384,7 +388,7 @@ export class Arena {
      * or this.persistenceUrl if not
      * @param {string} urlToLoad which url to unload arena from
      */
-    unloadArenaScene(urlToLoad) {
+    async unloadArenaScene(urlToLoad) {
         const xhr = new XMLHttpRequest();
         xhr.withCredentials = !this.defaults.disallowJWT;
         if (urlToLoad) xhr.open('GET', urlToLoad);
@@ -422,7 +426,7 @@ export class Arena {
     /**
      * Loads and applies scene-options (if it exists), otherwise set to default environment
      */
-    loadSceneOptions() {
+    async loadSceneOptions() {
         const sceneOptions = {};
 
         // we add all elements to our scene root
@@ -436,7 +440,7 @@ export class Arena {
         const environment = document.createElement('a-entity');
         environment.id = 'env';
 
-        fetch(`${this.persistenceUrl}?type=scene-options`, {
+        await fetch(`${this.persistenceUrl}?type=scene-options`, {
             method: 'GET',
             credentials: this.defaults.disallowJWT? 'omit' : 'same-origin',
         }).

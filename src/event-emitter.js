@@ -97,15 +97,6 @@ export class ARENAEventEmitter {
         ONLOCATION: 'onlocation',
 
         /**
-         * Indicates when scene is successfully fully loaded. The event provides
-         * the following parameters to its listeners (event.detail object):
-         *
-         * @callback onSceneLoadedCallback
-         * @param result {boolean} Should always be true
-         */
-        SCENE_LOADED: 'scene_loaded',
-
-        /**
          * Indicates when a user is talking on mute. The event provides
          * the following parameters to its listeners (event.detail object):
          *

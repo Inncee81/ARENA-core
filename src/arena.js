@@ -299,9 +299,11 @@ export class Arena {
             method: 'GET',
             credentials: this.defaults.disallowJWT? 'omit' : 'same-origin',
         });
+        console.error('loadScene() fetched')
         let data;
         if (res.status === 200) {
             data = await res.json();
+            console.error('loadScene() jsoned')
         }
             try {
                 if (data === undefined || data.length === 0) {
@@ -447,7 +449,9 @@ export class Arena {
             method: 'GET',
             credentials: this.defaults.disallowJWT? 'omit' : 'same-origin',
         });
+        console.error('loadSceneOptions() fetched')
         const data = await res.json();
+        console.error('loadSceneOptions() jsoned')
             try {
                 const payload = data[data.length - 1];
                 if (payload) {

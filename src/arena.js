@@ -450,8 +450,8 @@ export class Arena {
             method: 'GET',
             credentials: this.defaults.disallowJWT? 'omit' : 'same-origin',
         });
-        await res.json().
-            then((data) => {
+        const data = await res.json();
+        new Promise((resolve, reject) => {
                 const payload = data[data.length - 1];
                 if (payload) {
                     const options = payload['attributes'];

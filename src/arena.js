@@ -295,15 +295,16 @@ export class Arena {
         console.error('loadScene() in')
         const deferredObjects = [];
 
-        const res = await fetch(this.persistenceUrl, {
+        return await fetch(this.persistenceUrl, {
             method: 'GET',
             credentials: this.defaults.disallowJWT? 'omit' : 'same-origin',
-        });
-        let data;
-        if (res.status === 200) {
-            data = await res.json();
-        }
-        return await new Promise((resolve, reject) => {
+        }).then( async (res) => {
+            if (res.status === 200) {
+                return await res.json();
+            }
+            return await Promise.reject(res);
+        }).
+            then( async (data) => {
                 if (data === undefined || data.length === 0) {
                     throw new Error('No scene objects found in persistence.');
                 }
@@ -373,7 +374,7 @@ export class Arena {
                     this.Mqtt.processMessage(msg);
                 }
             }).
-            catch((res) => {
+            catch(async (res) => {
                 Swal.fire({
                     title: 'Error loading initial scene data',
                     text: `${res.status}: ${res.statusText} ${JSON.stringify(res.json())}`,
@@ -382,7 +383,7 @@ export class Arena {
                     confirmButtonText: 'Ok',
                 });
             }).
-            finally(() => {
+            finally(async () => {
                 console.error('loadScene() out')
             });
     };
@@ -445,12 +446,12 @@ export class Arena {
         const environment = document.createElement('a-entity');
         environment.id = 'env';
 
-        const res = await fetch(`${this.persistenceUrl}?type=scene-options`, {
+        return await fetch(`${this.persistenceUrl}?type=scene-options`, {
             method: 'GET',
             credentials: this.defaults.disallowJWT? 'omit' : 'same-origin',
-        });
-        const data = await res.json();
-        return await new Promise((resolve, reject) => {
+        }).
+            then( async (res) => await res.json()).
+            then( async (data) => {
                 const payload = data[data.length - 1];
                 if (payload) {
                     const options = payload['attributes'];
@@ -496,7 +497,7 @@ export class Arena {
                     throw new Error('No scene-options');
                 }
             }).
-            catch(() => {
+            catch(async () => {
                 environment.setAttribute('environment', 'preset', 'starry');
                 environment.setAttribute('environment', 'seed', 3);
                 environment.setAttribute('environment', 'flatShading', true);
@@ -521,7 +522,7 @@ export class Arena {
                 sceneRoot.appendChild(light);
                 sceneRoot.appendChild(light1);
             }).
-            finally(() => {
+            finally(async () => {
                 this.sceneOptions = sceneOptions;
                 console.error('loadSceneOptions() out')
             });

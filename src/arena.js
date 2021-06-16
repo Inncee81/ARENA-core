@@ -295,16 +295,15 @@ export class Arena {
         console.error('loadScene() in')
         const deferredObjects = [];
 
-        return await fetch(this.persistenceUrl, {
+        const res = await fetch(this.persistenceUrl, {
             method: 'GET',
             credentials: this.defaults.disallowJWT? 'omit' : 'same-origin',
-        }).then( async (res) => {
-            if (res.status === 200) {
-                return await res.json();
-            }
-            return await Promise.reject(res);
-        }).
-            then( async (data) => {
+        });
+        let data;
+        if (res.status === 200) {
+            data = await res.json();
+        }
+            try {
                 if (data === undefined || data.length === 0) {
                     throw new Error('No scene objects found in persistence.');
                 }
@@ -373,8 +372,7 @@ export class Arena {
                     console.info('adding deferred object ' + obj.object_id + ' to parent ' + obj.attributes.parent);
                     this.Mqtt.processMessage(msg);
                 }
-            }).
-            catch(async (res) => {
+            } catch {
                 Swal.fire({
                     title: 'Error loading initial scene data',
                     text: `${res.status}: ${res.statusText} ${JSON.stringify(res.json())}`,
@@ -382,10 +380,9 @@ export class Arena {
                     showConfirmButton: true,
                     confirmButtonText: 'Ok',
                 });
-            }).
-            finally(async () => {
+            } finally {
                 console.error('loadScene() out')
-            });
+            }
     };
 
     /**

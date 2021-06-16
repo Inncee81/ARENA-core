@@ -214,9 +214,9 @@ export class Arena {
      */
     initScene = () => {
         // load scene
-        ARENA.loadSceneOptions()
-            .then(ARENA.loadScene())
-            .then(ARENA.loadCamera());
+        ARENA.loadSceneOptions();
+        ARENA.loadScene();
+        ARENA.loadCamera();
     }
 
     /**
@@ -446,11 +446,11 @@ export class Arena {
         const environment = document.createElement('a-entity');
         environment.id = 'env';
 
-        return await Promise.all( fetch(`${this.persistenceUrl}?type=scene-options`, {
+        const res = await fetch(`${this.persistenceUrl}?type=scene-options`, {
             method: 'GET',
             credentials: this.defaults.disallowJWT? 'omit' : 'same-origin',
-        }).
-            then((res) => res.json()).
+        });
+        await res.json().
             then((data) => {
                 const payload = data[data.length - 1];
                 if (payload) {
@@ -525,7 +525,7 @@ export class Arena {
             finally(() => {
                 this.sceneOptions = sceneOptions;
                 console.error('loadSceneOptions() out')
-            }));
+            });
     };
 
     /**

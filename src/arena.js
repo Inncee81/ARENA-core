@@ -214,9 +214,9 @@ export class Arena {
      */
     initScene = () => {
         // load scene
-        ARENA.loadSceneOptions();
-        ARENA.loadScene();
-        ARENA.loadCamera();
+        ARENA.loadSceneOptions().then(
+        ARENA.loadScene()).then(
+        ARENA.loadCamera());
     }
 
     /**

@@ -214,9 +214,9 @@ export class Arena {
      */
     initScene = () => {
         // load scene
-        ARENA.loadSceneOptions();
-        ARENA.loadScene();
-        ARENA.loadCamera();
+        ARENA.loadSceneOptions()
+            .then(ARENA.loadScene())
+            .then(ARENA.loadCamera());
     }
 
     /**
@@ -295,7 +295,7 @@ export class Arena {
         console.error('loadScene() in')
         const deferredObjects = [];
 
-        await fetch(this.persistenceUrl, {
+        return fetch(this.persistenceUrl, {
             method: 'GET',
             credentials: this.defaults.disallowJWT? 'omit' : 'same-origin',
         }).then((res) => {
@@ -306,8 +306,7 @@ export class Arena {
         }).
             then((data) => {
                 if (data === undefined || data.length === 0) {
-                    console.error('No scene objects found in persistence.');
-                    return;
+                    throw new Error('No scene objects found in persistence.');
                 }
                 const arenaObjects = data;
                 for (let i = 0; i < arenaObjects.length; i++) {
@@ -447,7 +446,7 @@ export class Arena {
         const environment = document.createElement('a-entity');
         environment.id = 'env';
 
-        await fetch(`${this.persistenceUrl}?type=scene-options`, {
+        return fetch(`${this.persistenceUrl}?type=scene-options`, {
             method: 'GET',
             credentials: this.defaults.disallowJWT? 'omit' : 'same-origin',
         }).

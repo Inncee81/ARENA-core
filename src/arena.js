@@ -446,12 +446,12 @@ export class Arena {
         const environment = document.createElement('a-entity');
         environment.id = 'env';
 
-        return await fetch(`${this.persistenceUrl}?type=scene-options`, {
+        const res = await fetch(`${this.persistenceUrl}?type=scene-options`, {
             method: 'GET',
             credentials: this.defaults.disallowJWT? 'omit' : 'same-origin',
-        }).
-            then( async (res) => await res.json()).
-            then( async (data) => {
+        });
+        const data = await res.json();
+            try {
                 const payload = data[data.length - 1];
                 if (payload) {
                     const options = payload['attributes'];
@@ -496,8 +496,7 @@ export class Arena {
                 } else {
                     throw new Error('No scene-options');
                 }
-            }).
-            catch(async () => {
+            } catch {
                 environment.setAttribute('environment', 'preset', 'starry');
                 environment.setAttribute('environment', 'seed', 3);
                 environment.setAttribute('environment', 'flatShading', true);
@@ -521,11 +520,10 @@ export class Arena {
 
                 sceneRoot.appendChild(light);
                 sceneRoot.appendChild(light1);
-            }).
-            finally(async () => {
+            } finally {
                 this.sceneOptions = sceneOptions;
                 console.error('loadSceneOptions() out')
-            });
+            }
     };
 
     /**

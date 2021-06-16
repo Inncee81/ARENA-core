@@ -223,6 +223,7 @@ export class Arena {
      * After scene is completely loaded, add user camera
      */
     async loadCamera() {
+        console.error('loadCamera() in')
             const systems = AFRAME.scenes[0].systems;
             let color = Math.floor(Math.random() * 16777215).toString(16);
             if (color.length < 6) color = '0' + color;
@@ -280,7 +281,8 @@ export class Arena {
                 camera.setAttribute('arena-camera', 'vioEnabled', true);
             }
             SideMenu.setupIcons();
-    }
+            console.error('loadCamera() out')
+        }
 
     /**
      * loads scene objects from specified persistence URL if specified,
@@ -290,6 +292,7 @@ export class Arena {
      * @param {Object} rotation initial rotation
      */
     async loadScene(urlToLoad, position, rotation) {
+        console.error('loadScene() in')
         const deferredObjects = [];
 
         await fetch(this.persistenceUrl, {
@@ -380,6 +383,9 @@ export class Arena {
                     showConfirmButton: true,
                     confirmButtonText: 'Ok',
                 });
+            }).
+            finally(() => {
+                console.error('loadScene() out')
             });
     };
 
@@ -427,6 +433,7 @@ export class Arena {
      * Loads and applies scene-options (if it exists), otherwise set to default environment
      */
     async loadSceneOptions() {
+        console.error('loadSceneOptions() in')
         const sceneOptions = {};
 
         // we add all elements to our scene root
@@ -516,7 +523,10 @@ export class Arena {
                 sceneRoot.appendChild(light);
                 sceneRoot.appendChild(light1);
             }).
-            finally(() => this.sceneOptions = sceneOptions);
+            finally(() => {
+                this.sceneOptions = sceneOptions;
+                console.error('loadSceneOptions() out')
+            });
     };
 
     /**

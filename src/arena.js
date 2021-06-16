@@ -295,16 +295,15 @@ export class Arena {
         console.error('loadScene() in')
         const deferredObjects = [];
 
-        return await fetch(this.persistenceUrl, {
+        const res = await fetch(this.persistenceUrl, {
             method: 'GET',
             credentials: this.defaults.disallowJWT? 'omit' : 'same-origin',
-        }).then((res) => {
-            if (res.status === 200) {
-                return res.json();
-            }
-            return Promise.reject(res);
-        }).
-            then((data) => {
+        });
+        let data;
+        if (res.status === 200) {
+            data = await res.json();
+        }
+        return await new Promise((resolve, reject) => {
                 if (data === undefined || data.length === 0) {
                     throw new Error('No scene objects found in persistence.');
                 }
@@ -451,7 +450,7 @@ export class Arena {
             credentials: this.defaults.disallowJWT? 'omit' : 'same-origin',
         });
         const data = await res.json();
-        new Promise((resolve, reject) => {
+        return await new Promise((resolve, reject) => {
                 const payload = data[data.length - 1];
                 if (payload) {
                     const options = payload['attributes'];

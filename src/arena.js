@@ -222,7 +222,7 @@ export class Arena {
     /**
      * After scene is completely loaded, add user camera
      */
-    async loadCamera() {
+    loadCamera() {
         console.error('loadCamera() in')
             const systems = AFRAME.scenes[0].systems;
             let color = Math.floor(Math.random() * 16777215).toString(16);
@@ -295,7 +295,7 @@ export class Arena {
         console.error('loadScene() in')
         const deferredObjects = [];
 
-        return fetch(this.persistenceUrl, {
+        return await fetch(this.persistenceUrl, {
             method: 'GET',
             credentials: this.defaults.disallowJWT? 'omit' : 'same-origin',
         }).then((res) => {
@@ -446,7 +446,7 @@ export class Arena {
         const environment = document.createElement('a-entity');
         environment.id = 'env';
 
-        return fetch(`${this.persistenceUrl}?type=scene-options`, {
+        return await fetch(`${this.persistenceUrl}?type=scene-options`, {
             method: 'GET',
             credentials: this.defaults.disallowJWT? 'omit' : 'same-origin',
         }).

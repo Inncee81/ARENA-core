@@ -5,7 +5,7 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>ARENA Users</title>
     <link href="vendor/mdb/arenaxr-mdb.css" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css" />
+    <link href="https://use.fontawesome.com/releases/v5.15.2/css/all.css" rel="stylesheet"/>
     <link href="images/conix-x.png" rel="icon" type="image/png">
     <link href="https://fonts.gstatic.com" rel="preconnect">
     <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Roboto+Slab&display=swap" rel="stylesheet">
@@ -15,17 +15,43 @@
             height: 100%;
             font-family: 'Roboto', sans-serif;
         }
+
         .navbar {
             background-color: #a60c1b;
             background-image: none;
         }
+
         #top-banner {
             background: url("images/bannerbg.jpg") no-repeat;
             background-size: cover;
         }
-        #banner-row {
+
+        .arrow-bg {
             background: url("images/arrowbg.png") no-repeat;
             min-height: 500px;
+        }
+
+        #hero-embed {
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+
+        #hero-embed iframe {
+
+        }
+
+        .z-1 {
+            z-index: 1;
+        }
+
+        .z-2 {
+            z-index: 2;
+        }
+
+        .z-3 {
+            z-index: 3;
         }
 
         .top-logo {
@@ -40,8 +66,18 @@
             width: 350px;
         }
 
+        .text-white svg {
+            fill: white;
+        }
+
+        .feature-icon {
+            width: 64px;
+            display: block;
+            margin: 5px;
+        }
+
         #announcements {
-            background-color: rgba(232,59,62,1);
+            background-color: rgba(232, 59, 62, 1);
         }
 
         .font-weight-boldest {
@@ -52,85 +88,55 @@
             max-height: 48px;
         }
 
-        img.scene-thumb {
-            transition: transform .25s ease;
-        }
-
-        @media (min-width: 1200px) {
-            img.scene-thumb:hover {
-                transform: scale(1.75);
-            }
-
-            .thumb-container:nth-child(4n+2) img.scene-thumb:hover {
-                transform: translateX(30%) scale(1.75);
-            }
-
-            .thumb-container:nth-child(4n+1) img.scene-thumb:hover {
-                transform: translateX(-30%) scale(1.75);
-            }
-        }
-
-        @media (min-width: 768px) and (max-width: 1199px) {
-            img.scene-thumb:hover {
-                transform: scale(1.5);
-            }
-
-            .thumb-container:nth-child(3n+2) img.scene-thumb:hover {
-                transform: translateX(25%) scale(1.5);
-            }
-
-            .thumb-container:nth-child(3n+1) img.scene-thumb:hover {
-                transform: translateX(-25%) scale(1.5);
-            }
-        }
-
-        @media (min-width: 576px) and (max-width: 767.98px) {
-            .thumb-container:nth-child(even) img.scene-thumb:hover {
-                transform: translateX(25%) scale(1.5);
-            }
-
-            .thumb-container:nth-child(odd) img.scene-thumb:hover {
-                transform: translateX(-25%) scale(1.5);
-            }
-        }
 
     </style>
 </head>
 
-<body>
-    <nav class="navbar navbar-expand-sm navbar-dark sticky-top">
-        <div class="container">
-            <button
-                    class="navbar-toggler"
-                    type="button"
-                    data-mdb-toggle="collapse"
-                    data-mdb-target="#navbarSupportedContent"
-                    aria-controls="navbarSupportedContent"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation"
-            >
-                <i class="fas fa-bars"></i>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item mx-4">
-                        <a class="nav-link active" href="#showcase">Showcase</a>
-                    </li>
-                    <li class="nav-item mx-4">
-                        <a class="nav-link active" href="#community">Community</a>
-                    </li>
-                    <li class="nav-item mx-4">
-                        <a class="nav-link active" href="https://github.com/conix-center/ARENA" target="_blank">GitHub</a>
-                    </li>
-                </ul>
-                <a class="btn btn-light" href="/user">Login</a>
-            </div>
+<body onhashchange="activeNavHash()">
+<nav class="navbar navbar-expand-sm navbar-dark sticky-top">
+    <div class="container">
+        <button
+                aria-controls="navbarSupportedContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+                class="navbar-toggler"
+                data-mdb-target="#navbarSupportedContent"
+                data-mdb-toggle="collapse"
+                type="button"
+        >
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item mx-4">
+                    <a class="nav-link" href="#showcase">showcase</a>
+                </li>
+                <li class="nav-item mx-4">
+                    <a class="nav-link" href="#community">community</a>
+                </li>
+                <li class="nav-item mx-4">
+                    <a class="nav-link" href="https://github.com/conix-center/ARENA" target="_blank">GitHub</a>
+                </li>
+            </ul>
+            <a class="btn btn-light" href="/user">Login</a>
         </div>
-    </nav>
+    </div>
+</nav>
 
 
-    <div class="container-fluid" id="top-banner">
-        <div class="row" id="banner-row">
+<div class="container-fluid position-relative" id="top-banner">
+    <div class="row">
+        <div class="p-0 position-absolute w-100 h-100 z-1" id="hero-embed">
+            <iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen="1"
+                    class="w-100 h-100 z-1"
+                    frameborder="0"
+                    id="hero-tube"
+                    src="https://www.youtube-nocookie.com/embed/ftY3VMM2rhU?autoplay=1&controls=0&showinfo=0&modestbranding=1&wmode=transparent&disablekb=1&rel=0&enablejsapi=1&widgetid=1&loop=1"
+                    tabindex="-1" title="YouTube video player" width="100%"></iframe>
+            <div class="z-2 position-absolute w-100 h-100 top-0"></div>
+        </div>
+        <div class="col-12 arrow-bg  z-3">
             <div class="col-350 p-5">
                 <div class="row mt-3">
                     <div class="col">
@@ -139,8 +145,8 @@
                 </div>
                 <div class="row mt-5">
                     <div class="col intro-text">
-                        The ARENA (Augmented Reality Edge Networking Architecture) is a platform for supporting real-time
-                        mixed reality interaction between multiple users and the physical world.
+                        The Augmented Reality Edge Network Architecture (ARENA) is a multi-user and multi-application
+                        environment to simplify the development of mixed reality.
                     </div>
                 </div>
                 <div class="row mt-5 text-center">
@@ -154,125 +160,295 @@
                             <a class="btn btn-primary" href="/user">
                                 Login
                             </a>
-                       </div>
-                   </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-12 p-3 text-white d-flex justify-content-center align-items-center" id="announcements">
-                Try the ARENA builder to easily create scene objects
-                <button class="btn btn-outline-white ms-3">
-                    Try Builder
-                </button>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 p-3 text-white d-flex justify-content-center align-items-center" id="announcements">
+            Check out our Getting Started tutorial
+            <a class="btn btn-outline-white ms-3" href="https://arena.conix.io/content/overview/user-guide.html">
+                View Tutorial
+            </a>
+        </div>
+    </div>
+</div>
+<div class="container-fluid mb-5 bg-dark ">
+    <div class="container">
+        <div class="row p-3 text-white" id="feature-row">
+            <div class="col-md-4 justify-content-center d-flex px-md-3 px-lg-5">
+                <div>
+                    <svg class="feature-icon" version="1.1" viewBox="0 0 480.21 480.21" xml:space="preserve"
+                         xmlns="http://www.w3.org/2000/svg">
+		        <path d="M372.189,256.191l-51.928-66.104c18.439-18.904,29.574-43.737,31.424-70.08h80.408v8.8    c-18.613,3.825-31.979,20.198-32,39.2c0.005,22.091,17.917,39.996,40.008,39.992s39.996-17.917,39.992-40.008    c-0.004-19.005-13.379-35.383-32-39.184v-16.8c0-4.418-3.582-8-8-8h-88.408c-1.564-22.165-9.728-43.355-23.44-60.84l11.16-11.16    h94.16c4.418,12.497,18.131,19.046,30.627,14.627c12.497-4.418,19.046-18.131,14.627-30.627S460.689-3.039,448.193,1.379    c-6.835,2.416-12.211,7.793-14.627,14.627h-97.472c-2.122,0-4.156,0.844-5.656,2.344l-12.92,12.92    c-44.458-42.816-115.208-41.485-158.025,2.973c-18.198,18.896-29.169,43.592-30.991,69.763h-67.2L35.149,45.183    C46.84,39.03,51.33,24.566,45.178,12.875S24.561-3.305,12.87,2.847C1.18,8.999-3.31,23.463,2.842,35.154    c3.233,6.144,8.977,10.581,15.739,12.156l30.2,67.952c1.286,2.887,4.152,4.746,7.312,4.744h72.408    c1.842,26.04,12.762,50.608,30.856,69.424l-67.536,67.536c-43.669-6.543-84.374,23.553-90.917,67.222    c-6.543,43.669,23.553,84.374,67.222,90.917c1.318,0.198,2.641,0.362,3.967,0.493v40.408c0,4.418,3.582,8,8,8h73.472    c4.418,12.497,18.131,19.046,30.627,14.627s19.046-18.131,14.627-30.627s-18.131-19.046-30.627-14.627    c-6.835,2.416-12.211,7.793-14.627,14.627H88.093v-32.408c43.938-4.38,76.007-43.55,71.627-87.489    c-2.964-29.732-22.26-55.331-50.027-66.367l61.6-61.6c40.116,31.586,96.582,31.813,136.952,0.552l44.384,56.496    c-61.285,8.549-104.036,65.16-95.487,126.444c8.549,61.285,65.16,104.036,126.444,95.487    c61.285-8.549,104.036-65.16,95.487-126.444C471.565,298.847,426.504,258.17,372.189,256.191z M464.093,168.007    c0,13.255-10.745,24-24,24s-24-10.745-24-24s10.745-24,24-24S464.093,154.752,464.093,168.007z M456.093,16.007    c4.418,0,8,3.582,8,8s-3.582,8-8,8s-8-3.582-8-8S451.675,16.007,456.093,16.007z M24.093,32.007c-4.418,0-8-3.582-8-8s3.582-8,8-8    s8,3.582,8,8S28.511,32.007,24.093,32.007z M176.093,448.007c4.418,0,8,3.582,8,8s-3.582,8-8,8s-8-3.582-8-8    S171.675,448.007,176.093,448.007z M112.093,391.351c-19.771,11.546-44.229,11.546-64,0v-15.344c0-17.673,14.327-32,32-32    s32,14.327,32,32V391.351z M64.093,312.007c0-8.837,7.163-16,16-16s16,7.163,16,16s-7.163,16-16,16S64.093,320.843,64.093,312.007    z M128.093,293.535c10.342,11.727,16.034,26.835,16,42.472c-0.003,15.546-5.694,30.553-16,42.192v-2.192    c-0.01-17.49-9.533-33.591-24.856-42.024c12.203-12.784,11.731-33.04-1.053-45.243c-12.784-12.202-33.04-11.731-45.243,1.053    c-11.803,12.365-11.803,31.824,0,44.189c-15.32,8.435-24.839,24.535-24.848,42.024v2.192    c-23.379-26.51-20.841-66.953,5.668-90.332C64.271,264.487,104.714,267.025,128.093,293.535z M296.093,189.799    c-33.397,24.246-78.603,24.246-112,0v-19.392c0-14.58,11.82-26.4,26.4-26.4h17.76l-11.608,29.024    c-1.189,2.973-0.49,6.37,1.776,8.632l16,16c3.124,3.123,8.188,3.123,11.312,0l16-16c2.266-2.263,2.965-5.659,1.776-8.632    l-11.6-29.024h17.784c14.58,0,26.4,11.82,26.4,26.4V189.799z M241.238,59.887c-0.3,0.5-0.544,1.03-0.728,1.583    c-4.048,12.136-25.903,16.736-39.975,18.072c2.146-26.81,14.762-39.536,39.559-39.536c22.704,0,35.2,10.736,38.776,33.136    l-26.656-16C248.424,54.87,243.51,56.099,241.238,59.887z M251.125,75.159l28.592,17.16    c-3.208,19.584-27.344,35.688-39.624,35.688c-17.843-3.039-32.686-15.412-38.888-32.416    C214.901,94.463,239.629,90.311,251.125,75.159z M246.701,174.079l-6.608,6.616l-6.608-6.616l6.608-16.536L246.701,174.079z     M274.997,128.375c12.48-9.821,20.159-24.515,21.096-40.368c0-52.896-30.456-64-56-64s-56,11.104-56,64    c0.93,15.862,8.61,30.566,21.096,40.392c-21.206,2.613-37.127,20.641-37.096,42.008v4.864    c-35.069-39.764-31.263-100.429,8.502-135.498C216.36,4.704,277.024,8.51,312.093,48.274c32,36.285,32,90.711,0,126.996v-4.864    C312.136,149.031,296.212,130.988,274.997,128.375z M424.093,445.799c-33.397,24.246-78.603,24.246-112,0v-19.392    c0-14.58,11.82-26.4,26.4-26.4h17.76l-11.608,29.024c-1.189,2.973-0.49,6.369,1.776,8.632l16,16c3.124,3.123,8.188,3.123,11.312,0    l16-16c2.266-2.263,2.965-5.659,1.776-8.632l-11.6-29.024h17.784c14.58,0,26.4,11.82,26.4,26.4V445.799z M379.125,331.159l0-0.008    l28.592,17.16c-3.208,19.592-27.344,35.696-39.624,35.696c-17.843-3.039-32.686-15.412-38.888-32.416    C342.901,350.463,367.629,346.31,379.125,331.159z M328.533,335.543L328.533,335.543c2.144-26.808,14.76-39.536,39.56-39.536    c22.704,0,35.2,10.736,38.776,33.136l-26.656-16c-3.789-2.273-8.703-1.044-10.976,2.745c-0.3,0.5-0.544,1.03-0.728,1.583    C364.461,329.607,342.605,334.207,328.533,335.543z M374.701,430.079l-6.608,6.616l-6.608-6.616l6.608-16.536L374.701,430.079z     M440.093,431.294v-4.888c0.043-21.376-15.881-39.418-37.096-42.032c12.48-9.821,20.159-24.515,21.096-40.368    c0-52.896-30.456-64-56-64s-56,11.104-56,64c0.93,15.862,8.61,30.566,21.096,40.392c-21.206,2.613-37.127,20.641-37.096,42.008    v4.864c-34.987-39.795-31.089-100.419,8.706-135.406c39.795-34.987,100.419-31.089,135.406,8.706    c15.416,17.534,23.909,40.088,23.888,63.435C464.088,391.325,455.552,413.836,440.093,431.294z"/>
+            </svg>
+                    <h3>connect</h3>
+                    <p>
+                        A directory service connects users to nearby servers and content. An application/service runtime
+                        supervisor that can dispatch programs across any network connected device.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4 justify-content-center d-flex px-md-3 px-lg-5">
+                <div>
+                    <svg class="feature-icon" viewBox="0 0 488.512 488.512" xmlns="http://www.w3.org/2000/svg">
+                        <path d="m485.392 83.862c-1.891-1.155-4.242-1.262-6.231-.284l-49.108 24.175-18.903-38.386 54.259-26.707c3.207-1.578 4.527-5.457 2.949-8.664-.224-.455-.501-.883-.825-1.273-1.713-2.065-3.599-4.131-5.609-6.139-35.444-35.445-92.912-35.446-128.357-.001-17.021 17.021-26.584 40.106-26.584 64.177.004 3.218.176 6.434.516 9.634l-59.829 59.828-132.498-132.32c-.948-.946-2.166-1.576-3.486-1.801l-94.16-16.037c-3.523-.601-6.866 1.769-7.467 5.292-.123.719-.123 1.454 0 2.174l16.039 94.161c.225 1.321.854 2.539 1.801 3.487l132.326 132.497-59.874 59.873c-49.791-5.342-94.485 30.692-99.827 80.483-.399 3.721-.568 7.464-.504 11.206.06 3.574 3.006 6.422 6.58 6.362.954-.016 1.893-.243 2.749-.664l49.108-24.175 18.902 38.386-54.259 26.707c-3.207 1.578-4.527 5.457-2.949 8.664.224.455.501.883.825 1.273 1.713 2.065 3.599 4.131 5.609 6.139 35.444 35.445 92.912 35.446 128.357.001 17.021-17.021 26.584-40.106 26.584-64.177-.004-3.218-.176-6.434-.516-9.634l59.775-59.774 108.836 109.05c11.591 11.703 27.383 18.28 43.854 18.265h.021c16.464.018 32.251-6.548 43.847-18.236.014-.015.03-.067.045-.083 24.188-24.243 24.159-63.499-.065-87.706l-108.98-108.84 59.821-59.823c3.185.34 6.386.514 9.589.519 50.081.042 90.713-40.522 90.755-90.602 0-.536-.004-1.072-.013-1.608-.039-2.22-1.21-4.264-3.103-5.419zm-429.278 12.26 301.116 301.671-14.407 14.407-301.194-301.597zm310.267 292.519-301.119-301.671 21.707-21.707 301.671 301.12zm31.411-31.41-301.672-301.119 14.481-14.481 301.595 301.195zm-373.439-332.875 72.817 12.404-60.413 60.411zm121.437 428.42c-30.075 30.007-78.646 30.388-109.187.855l52.278-25.733c3.207-1.578 4.527-5.457 2.949-8.664l-24.621-49.998c-1.579-3.207-5.458-4.526-8.664-2.948l-45.063 22.184c2.022-17.33 9.868-33.461 22.252-45.751 30.391-30.391 79.664-30.392 110.056-.001 30.39 30.391 30.391 79.664 0 110.056zm32.25-79.996c-8.626-30.138-32.204-53.684-62.353-62.27l53.679-53.679 62.269 62.351zm264.525 20.699c.041 13.025-5.134 25.525-14.37 34.71-.015.014-.028.108-.043.119-9.171 9.229-21.647 14.416-34.658 14.408h-.016c-13.035.006-25.531-5.204-34.701-14.468l-6.808-6.853 69.385-69.405 6.818 6.795c9.242 9.176 14.425 21.67 14.393 34.694zm-123.385-161.843-62.351-62.269 53.639-53.636c8.626 30.138 32.204 53.684 62.353 62.271zm133.595-85.849c-30.391 30.362-79.64 30.338-110.002-.053s-30.338-79.64.053-110.002c30.034-30.005 78.579-30.386 109.08-.855l-52.278 25.736c-3.207 1.578-4.527 5.457-2.949 8.664l24.621 49.998c1.579 3.207 5.458 4.526 8.664 2.948l45.063-22.184c-2.022 17.33-9.868 33.461-22.252 45.751z"/>
+                    </svg>
+                    <h3>customize</h3>
+                    <p>
+                        Define custom scenes, with 3D content and programs. The ARENA includes fine-grained access
+                        control
+                        and the ability to sandbox and isolate content and programs. </p>
+                </div>
+            </div>
+            <div class="col-md-4 justify-content-center d-flex px-md-3 px-lg-5">
+                <div>
+                    <svg class="feature-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="m12 12c-.068 0-.136-.014-.199-.042l-11.5-5c-.183-.079-.301-.259-.301-.458s.118-.379.301-.458l11.5-5c.127-.056.271-.056.398 0l11.5 5c.183.079.301.259.301.458s-.118.379-.301.458l-11.5 5c-.063.028-.131.042-.199.042zm-10.246-5.5 10.246 4.455 10.246-4.455-10.246-4.455z"/>
+                        <path d="m12 16c-.068 0-.136-.014-.199-.042l-11.5-5c-.183-.079-.301-.259-.301-.458s.118-.379.301-.458l4.6-2c.254-.11.547.005.658.259.11.253-.006.548-.259.658l-3.546 1.541 10.246 4.455 10.246-4.455-3.545-1.542c-.253-.11-.37-.405-.259-.658.11-.254.403-.37.658-.259l4.6 2c.182.08.3.26.3.459s-.118.379-.301.458l-11.5 5c-.063.028-.131.042-.199.042z"/>
+                        <path d="m12 20c-.068 0-.136-.014-.199-.042l-11.5-5c-.183-.079-.301-.259-.301-.458s.118-.379.301-.458l4.6-2c.254-.11.547.006.658.259.11.253-.006.548-.259.658l-3.546 1.541 10.246 4.455 10.246-4.455-3.545-1.542c-.253-.11-.37-.405-.259-.658.11-.253.403-.371.658-.259l4.6 2c.182.08.3.26.3.459s-.118.379-.301.458l-11.5 5c-.063.028-.131.042-.199.042z"/>
+                        <path d="m12 24c-.068 0-.136-.014-.199-.042l-11.5-5c-.183-.079-.301-.259-.301-.458s.118-.379.301-.458l4.6-2c.254-.111.547.006.658.259.11.253-.006.548-.259.658l-3.546 1.541 10.246 4.455 10.246-4.455-3.545-1.542c-.253-.11-.37-.405-.259-.658.11-.253.403-.371.658-.259l4.6 2c.182.08.3.26.3.459s-.118.379-.301.458l-11.5 5c-.063.028-.131.042-.199.042z"/>
+                    </svg>
+                    <h3>collaborate</h3>
+                    <p>
+                        Users in the physical space can see the same content anchored to the physical world in AR.
+                        Properties of all objects are networked to provide a consistent real-time view from any device
+                        or
+                        platform.
+                    </p>
+                </div>
             </div>
         </div>
     </div>
-    <div class="container-fluid mb-5">
-        <div class="row">
-            <div class="col-12 p-3 text-white d-flex justify-content-center align-items-center bg-dark" id="feature-row">
-                Features here
-            </div>
-        </div>
-    </div>
+</div>
 
-    <div class="container-xxl pb-5">
-        <div class="row my-4">
-            <div class="col-lg-6 offset-lg-1 col-xxl-5 px-0 bg-black">
-                <div class="ratio ratio-16x9">
-                    <iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowfullscreen
-                            frameborder="0"
-                            src="https://www.youtube-nocookie.com/embed/ftY3VMM2rhU?autoplay=1&loop=1&playlist=ftY3VMM2rhU&modestbranding=1&rel=0&controls=0">
-                    </iframe>
-                </div>
-            </div>
-            <div class="col-lg-3 offset-lg-1 col-xxl-4 py-4">
-                <h3 class="text-highlight">Heading</h3>
-                <p>Text Description of video</p>
+<div class="container-xxl pb-5">
+    <div class="row my-4 d-flex ">
+        <div class="col-lg-6 offset-lg-1 col-xxl-5 px-0 d-flex align-content-center">
+            <div class="ratio ratio-4x3 bg-black">
+                <iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen
+                        frameborder="0"
+                        src="https://www.youtube-nocookie.com/embed/zNLL9AbruKQ?modestbranding=1&rel=0">
+                </iframe>
             </div>
         </div>
-        <div class="row my-5">
-            <div class="col col-lg-8 offset-lg-2 col-12 d-flex">
-                <div class="flex-grow-1 text-center d-flex justify-content-around">
-                    <a href="https://www.youtube.com/playlist?list=PL_AQ_N7xzl5qA-5ezYJg80Br_jdbdathD" target="_blank">
-                        <img alt="youtube icon" class="social-icon" src="/images/youtube-icon.png"/>
-                    </a>
-                    <a href="https://github.com/conix-center" target="_blank">
-                        <img alt="github icon" class="social-icon" src="/images/github-icon.png"/>
-                    </a>
-                </div>
-                <div class="flex-grow-1  text-center">
-                    <a class="btn btn-outline-primary btn-lg" href="https://arena.conix.io/">Learn More</a>
-                </div>
-                <div class="flex-grow-1 text-center">
-                    <a class="btn btn-primary btn-lg font-weight-boldest" href="/user">Try Arena</a>
-                </div>
+        <div class="col-lg-4 px-5 py-4 d-flex align-content-center">
+            <div>
+                <h3 class="text-primary">Collaborative Mixed Reality</h3>
+                <p>ARENA simplifies many common development tasks for multiuser cross-platform mixed reality
+                    programming,
+                    including seamless support for a spectrum of experiences (VR, AR, XR), on multiple platforms,
+                    including
+                    tablets, phones, headsets, and desktop browsers. ARENA supports implicitly networked content,
+                    offering a
+                    multiuser experience in real-time and integrated accurate relocalization. It also allows to create
+                    and
+                    host user programs on any network-connected device with fine-grained access.</p>
             </div>
         </div>
-        <div class="row my-5 pt-3">
-            <div class="col-12 text-center">
-                <h2>
-                    Click the images to try these scenes
-                </h2>
-            </div>
-            <div class="col-xl-3 col-md-4 col-sm-6 p-3 thumb-container">
+    </div>
+</div>
+
+<div class="container-fluid arrow-bg">
+<div class="container-xxl pb-5">
+    <div class="row my-5 pt-3">
+        <div class="col-xl-4 col-sm-6 p-5">
+            <a id="showcase"></a>
+            <h3 class="text-primary">Showcase
+                <br/>
+                <small class="text-muted">Click the images to try these scenes</small>
+            </h3>
+        </div>
+        <div class="col-xl-4 col-sm-6 p-3">
+            <figure class="figure">
                 <a href="/public/lobby">
                     <img alt="Lobby Scene" class="img-fluid scene-thumb" src="/images/thumbs/a8.jpg">
                 </a>
-            </div>
-            <div class="col-xl-3 col-md-4 col-sm-6 p-3 thumb-container">
+                <figcaption class="figure-caption pt-3">The lobby. Small room with a view and showcase of some ARENA
+                    features.
+                </figcaption>
+            </figure>
+        </div>
+        <div class="col-xl-4 col-sm-6 p-3">
+            <figure class="figure">
                 <a href="/public/fireside">
                     <img alt="Fireside Scene" class="img-fluid scene-thumb"
                          src="/images/thumbs/a7.jpg">
                 </a>
-            </div>
-            <div class="col-xl-3 col-md-4 col-sm-6 p-3 thumb-container">
+                <figcaption class="figure-caption pt-3">Small meetup space by the fireside, with outdoor space too.
+                </figcaption>
+            </figure>
+        </div>
+        <!--
+        <div class="col-xl-4 col-sm-6 p-3">
+            <figure class="figure">
                 <a href="/public/meeting-4">
                     <img alt="Meeting-4 Scene" class="img-fluid scene-thumb"
                          src="/images/thumbs/a6.jpg">
                 </a>
-            </div>
-            <div class="col-xl-3 col-md-4 col-sm-6 p-3 thumb-container">
+                <figcaption class="figure-caption pt-3">The lobby. Small room with a view and showcase of some ARENA
+                    features.
+                </figcaption>
+            </figure>
+        </div>
+        <div class="col-xl-4 col-sm-6 p-3">
+            <figure class="figure">
                 <a href="/public/island">
                     <img alt="Island Scene" class="img-fluid scene-thumb" src="/images/thumbs/a5.jpg">
                 </a>
-            </div>
-            <div class="col-xl-3 col-md-4 col-sm-6 p-3 thumb-container">
+                <figcaption class="figure-caption pt-3">The lobby. Small room with a view and showcase of some ARENA
+                    features.
+                </figcaption>
+            </figure>
+        </div>
+        !-->
+        <div class="col-xl-4 col-sm-6 p-3">
+            <figure class="figure">
                 <a href="/public/kingshall">
                     <img alt="Kings Hall Scene" class="img-fluid scene-thumb"
                          src="/images/thumbs/a4.jpg">
                 </a>
-            </div>
-            <div class="col-xl-3 col-md-4 col-sm-6 p-3 thumb-container">
+                <figcaption class="figure-caption pt-3">The King’s hall is the most lavish of all the rooms at
+                    Skokloster Castle, Sweden.
+                </figcaption>
+            </figure>
+        </div>
+        <div class="col-xl-4 col-sm-6 p-3">
+            <figure class="figure">
                 <a href="/public/skatepark">
                     <img alt="Skate Park Scene" class="img-fluid scene-thumb"
                          src="/images/thumbs/a3.jpg">
                 </a>
-            </div>
-            <div class="col-xl-3 col-md-4 col-sm-6 p-3 thumb-container">
+                <figcaption class="figure-caption pt-3">Tour of the Southbank Skatepark, London, UK.
+
+                </figcaption>
+            </figure>
+        </div>
+        <div class="col-xl-4 col-sm-6 p-3">
+            <figure class="figure">
                 <a href="/public/cmu-tepper-hall">
                     <img alt="CMU Tepper Hall Scene" class="img-fluid scene-thumb"
                          src="/images/thumbs/a2.jpg">
                 </a>
-            </div>
-            <div class="col-xl-3 col-md-4 col-sm-6 p-3 thumb-container">
+                <figcaption class="figure-caption pt-3">Tour CMU’s Tepper Hall, Pittsburgh, USA.
+
+                </figcaption>
+            </figure>
+        </div>
+        <!--
+        <div class="col-xl-4 col-sm-6 p-3">
+            <figure class="figure">
                 <a href="/public/loft">
                     <img alt="Loft Scene" class="img-fluid scene-thumb" src="/images/thumbs/a1.jpg">
                 </a>
-            </div>
+                <figcaption class="figure-caption pt-3">The lobby. Small room with a view and showcase of some ARENA
+                    features.
+                </figcaption>
+            </figure>
         </div>
-        <div class="row my-4">
-            <div class="col col-lg-6 offset-lg-3 col-12 text-center">
-                This work was supported in part by the CONIX Research Center, one of six centers in JUMP, a
-                Semiconductor Research Corporation (SRC) program sponsored by DARPA.<br/>
-                For more information, please contact <a href="mailto:info@conix.io">info@conix.io</a>
+        !-->
+    </div>
+</div>
+</div>
+
+<div class="container-fluid arrow-bg">
+<div class="container-xxl pb-5">
+    <div class="row my-5 pt-3">
+        <div class="col-md-4">
+            <a id="community"></a>
+            <h3 class="text-primary">community</h3>
+            <p>Explore our documentation and source. Contribute, find ways to get involved, and stay up-to-date with the latest news and developments.</p>
+        </div>
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-6 card mb-3">
+                    <h4 class="text-primary">Documentation</h4>
+                    <p>Read the ARENA Documentation</p>
+                </div>
+                <div class="col-6 card mb-3">
+                    <h4 class="text-primary">Source Code</h4>
+                    <p>Check out the source</p>
+                </div>
+                <div class="col-6 card mb-3">
+                    <h4 class="text-primary">Demos</h4>
+                    <p>This youtube demo video playlsit showcases ARENA</p>
+                </div>
+                <div class="col-6 card mb-3">
+                    <h4 class="text-primary">TITLE</h4>
+                    <p>TEXT</p>
+                </div>
             </div>
         </div>
     </div>
+</div>
+</div>
 
-<script src="/vendor/mdb/mdb.min.js" type="text/javascript"></script>
+<div class="container-xxl pb-5">
+    <div class="row my-5 ">
+        <div class="col col-lg-8 offset-lg-2 col-12 d-flex">
+            <div class="flex-grow-1 text-center d-flex justify-content-around">
+                <a href="https://www.youtube.com/playlist?list=PL_AQ_N7xzl5qA-5ezYJg80Br_jdbdathD" target="_blank">
+                    <img alt="youtube icon" class="social-icon" src="/images/youtube-icon.png"/>
+                </a>
+                <a href="https://github.com/conix-center" target="_blank">
+                    <img alt="github icon" class="social-icon" src="/images/github-icon.png"/>
+                </a>
+            </div>
+            <div class="flex-grow-1  text-center">
+                <a class="btn btn-outline-primary btn-lg" href="https://arena.conix.io/">Learn More</a>
+            </div>
+            <div class="flex-grow-1 text-center">
+                <a class="btn btn-primary btn-lg font-weight-boldest" href="/user">Try Arena</a>
+            </div>
+        </div>
+    </div>
+    <div class="row my-4">
+        <div class="col col-lg-6 offset-lg-3 col-12 text-center">
+            This work was supported in part by the CONIX Research Center, one of six centers in JUMP, a
+            Semiconductor Research Corporation (SRC) program sponsored by DARPA.<br/>
+            For more information, please contact <a href="mailto:info@conix.io">info@conix.io</a>
+        </div>
+    </div>
+</div>
+
+<script id="youtube-api" src="https://www.youtube.com/iframe_api"></script>
+<script src="vendor/mdb/mdb.min.js" type="text/javascript"></script>
+<script>
+    function activeNavHash() {
+        const curHash = location.hash;
+        document.querySelectorAll('.navbar-nav .nav-item a').forEach((el) => {
+            el.classList.remove('active');
+        });
+        const curNav = document.querySelector(`.navbar-nav .nav-item a[href='${curHash}']`);
+        curNav.classList.add('active');
+    }
+
+    activeNavHash();
+    let player;
+
+    function onYouTubeIframeAPIReady() {
+        player = new YT.Player('hero-tube', {
+            videoId: 'ftY3VMM2rhU',
+            playerVars: {
+                'hero-tube': 1,
+            },
+            events: {
+                'onReady': (e) => {
+                    e.target.playVideo();
+                },
+                'onStateChange': (e) => {
+                    if (e.data === YT.PlayerState.ENDED) {
+                        e.target.playVideo();
+                    }
+                },
+            },
+        });
+    }
+</script>
 </body>
 </html>

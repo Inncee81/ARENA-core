@@ -1,5 +1,13 @@
 /* global THREE */
-import {Logger} from './logger.js';
+
+/**
+ * @fileoverview Handle client event messages
+ *
+ * Open source software under the terms in /LICENSE
+ * Copyright (c) 2020, The CONIX Research Center. All rights reserved.
+ * @date 2020
+ */
+
 import {Parser} from './parser.js';
 
 /**
@@ -21,7 +29,7 @@ export class ClientEvent {
 
         const entityEl = document.getElementById(id);
         if (!entityEl) {
-            Logger.error('clientEvent', `Object with object_id "${id}" does not exist!`);
+            console.error('clientEvent:', `Object with object_id "${id}" does not exist!`);
             return;
         }
 
@@ -33,7 +41,7 @@ export class ClientEvent {
                 parseFloat(data.position.z),
             );
         } else {
-            Logger.warning('clientEvent', 'Malformed message (no data.position):', JSON.stringify(message));
+            console.warning('clientEvent:', 'Malformed message (no data.position):', JSON.stringify(message));
         }
 
         const clicker = data.source;

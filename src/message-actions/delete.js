@@ -1,4 +1,10 @@
-import {Logger} from './logger.js';
+/**
+ * @fileoverview Handle delete messages
+ *
+ * Open source software under the terms in /LICENSE
+ * Copyright (c) 2020, The CONIX Research Center. All rights reserved.
+ * @date 2020
+ */
 
 /**
  * Delete object handler
@@ -11,12 +17,12 @@ export class Delete {
     static handle(message) {
         const id = message.id;
         if (id === undefined) {
-            Logger.error('delete', 'Malformed message (no object_id):', JSON.stringify(message));
+            console.error('delete: ', 'Malformed message (no object_id):', JSON.stringify(message));
         }
 
         const entityEl = document.getElementById(id);
         if (!entityEl) {
-            Logger.error('delete', `Object with object_id "${id}" does not exist!`);
+            console.error('delete: ', `Object with object_id "${id}" does not exist!`);
             return;
         }
 

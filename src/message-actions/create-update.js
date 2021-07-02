@@ -1,4 +1,12 @@
-import {Logger} from './logger.js';
+/* global ARENA */
+
+/**
+ * @fileoverview Handle create/update messages
+ *
+ * Open source software under the terms in /LICENSE
+ * Copyright (c) 2020, The CONIX Research Center. All rights reserved.
+ * @date 2020
+ */
 
 // handle actions
 const ACTIONS = {
@@ -52,14 +60,14 @@ export class CreateUpdate {
                     if (parentEl) {
                         parentEl.removeChild(entityEl);
                     } else {
-                        Logger.error('create', `Could not find parent of object_id "${id}" to clear object properties.`);
+                        console.error('create:', `Could not find parent of object_id "${id}" to clear object properties.`);
                     }
                     entityEl = undefined;
                 }
             } else if (action === ACTIONS.UPDATE) {
                 // warn that update to non-existing object will create it
                 if (!entityEl) {
-                    Logger.warning('update', `Object with object_id "${id}" does not exist; Creating...`);
+                    console.warning('update', `Object with object_id "${id}" does not exist; Creating...`);
                 }
             }
 
@@ -89,7 +97,7 @@ export class CreateUpdate {
                         entityEl.flushToDOM();
                         parentEl.appendChild(entityEl);
                     } else {
-                        Logger.warning('create', 'Orphaned:', `${id} cannot find parent: ${message.data.parent}!`);
+                        console.warning('create:', `Orphaned object ${id} cannot find parent: ${message.data.parent}!`);
                     }
                 } else {
                     const sceneRoot = document.getElementById('sceneRoot');
@@ -123,7 +131,7 @@ export class CreateUpdate {
             return;
 
         default:
-            Logger.warning((action === ACTIONS.UPDATE) ? 'update':'create', 'Unknown type:', JSON.stringify(message));
+            console.warning((action === ACTIONS.UPDATE) ? 'update: ':'create: ', 'Unknown type; ', JSON.stringify(message));
         }
     }
 
@@ -138,7 +146,7 @@ export class CreateUpdate {
         delete data.object_type; // remove attribute so we don't set it later
 
         if (!type) {
-            Logger.warning('Update/Create:', 'Malformed message; type is undefined; attributes might not be set correctly.');
+            console.warning((action === ACTIONS.UPDATE) ? 'update: ':'create: ', 'Malformed message; type is undefined; attributes might not be set correctly.', JSON.stringify(message));
         }
 
         // handle geometries and some type special cases
@@ -377,7 +385,7 @@ export class CreateUpdate {
 
         if (message.data.object_type === 'camera') { // camera override
             if (!myCamera) {
-                Logger.error('camera override', 'local camera object does not exist! (create camera before)');
+                console.error('camera override: ', 'local camera object does not exist! (create camera before)');
                 return;
             }
             const p = message.data.position;
@@ -386,11 +394,11 @@ export class CreateUpdate {
             if (r) {
                 myCamera.components['look-controls'].yawObject.rotation.setFromQuaternion(
                     new THREE.Quaternion(r.x, r.y, r.z, r.w));
-                Logger.warning('camera override', message);
+                //console.info('camera override: ', JSON.stringify(message));
             }
         } else if (message.data.object_type === 'look-at') { // camera look-at
             if (!myCamera) {
-                Logger.error('camera look-at', 'local camera object does not exist! (create camera before)');
+                console.error('camera look-at: ', 'local camera object does not exist! (create camera before)');
                 return;
             }
             let target = message.data.target;
@@ -398,7 +406,7 @@ export class CreateUpdate {
                 const targetObj = document.getElementById(target);
                 if (targetObj) target = targetObj.object3D.position; // will be processed as x, y, z below
                 else {
-                    Logger.error('camera look-at', 'target not found.');
+                    console.error('camera look-at: ', 'target not found: ', JSON.stringify(target));
                     return;
                 }
             }
@@ -408,7 +416,7 @@ export class CreateUpdate {
                 target.hasOwnProperty('z')) {
                 myCamera.components['look-controls'].yawObject.lookAt( target.x, target.y, target.z );
                 myCamera.components['look-controls'].pitchObject.lookAt( target.x, target.y, target.z );
-                Logger.warning('camera look-at', message);
+                //console.info('camera look-at: ', JSON.stringify(message));
             }
         }
     }

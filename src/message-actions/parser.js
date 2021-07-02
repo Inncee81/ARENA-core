@@ -1,4 +1,10 @@
-import {Logger} from './logger.js';
+/**
+ * @fileoverview Handle message parsing/checks
+ *
+ * Open source software under the terms in /LICENSE
+ * Copyright (c) 2020, The CONIX Research Center. All rights reserved.
+ * @date 2020
+ */
 
 /**
  * Message parser and verifier
@@ -12,19 +18,19 @@ export class Parser {
      */
     static parse(source, message) {
         if (!message) {
-            Logger.warn(source, 'Received empty message');
+            console.warn(`[action=${source}]`, 'Received empty message');
             return undefined;
         }
 
         const object_id = message.object_id;
         if (object_id === undefined) {
-            Logger.error(source, 'Malformed message (no object_id):', JSON.stringify(message));
+            console.error(`[action=${source}]`, 'Malformed message (no object_id):', JSON.stringify(message));
             return undefined;
         }
 
         const data = message.data;
         if (data === undefined) {
-            Logger.error(source, 'Malformed message (no data field):', JSON.stringify(message));
+            console.error(`[action=${source}]`, 'Malformed message (no data field):', JSON.stringify(message));
             return undefined;
         }
 
